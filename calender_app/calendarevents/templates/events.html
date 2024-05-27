@@ -1,0 +1,14 @@
+{% load static %}
+{% block content %}
+    <h1>Events</h1>
+    <ul>
+        {% for event in evented %}
+            <li>
+                <strong>{{ event.title }}</strong> - {{ event.start_time }} to {{ event.end_time }}
+                <br>
+                {{ event.description }}
+            </li>
+        </ul>
+        {% endfor %}
+        <a href="{% url 'calendar' %}">Back to Calendar</a>
+{% endblock content %}

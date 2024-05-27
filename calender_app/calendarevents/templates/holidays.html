@@ -1,0 +1,12 @@
+{% load static %}
+{% block content %}
+    <h1>Holidays</h1>
+    <ul>
+        {% for holiday in holidays %}
+        <li>
+            <strong>{{ holiday.name }}</strong> - {{ holiday.date }}
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'calendar' %}">Back to Calendar</a>
+{% endblock content %}

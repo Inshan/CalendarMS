@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="https://unpkg.com/react-calendar/dist/Calendar.css">
+</head>
+<body>
+    <h1>Calendar</h1>
+    <div>
+        <a href="{% url 'holidays' %}">View Holidays</a> | 
+        <a href="{% url 'events' %}">View Events</a> | 
+        <a href="{% url 'event_create' %}">Create Event</a>
+    </div>
+    {% block content %}
+    {% endblock content %}
+    </body>
+</html>
