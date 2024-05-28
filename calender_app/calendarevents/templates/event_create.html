@@ -2,28 +2,29 @@
 {% load static %}
 {% block content %}
     <h1>Create Event</h1>
-    <form method="post" enctype="multipart/form-data" action="{% url 'calendar' %}"
-    >
+    <form method="post" action="{% url 'event_create' %}">
         {% csrf_token %}
         <label>Title:</label>
-        <input type="text" name="title" required><br>
-        
+        <input type="text" name="title" required>
+        <br>
         <label>Description:</label>
-        <textarea name="description" required></textarea><br>
-        
+        <textarea name="description" required></textarea>
+        <br>
         <label>Start Time:</label>
-        <input type="datetime-local" name="start_time" required><br>
-        
+        <input type="datetime-local" name="start_time" required>
+        <br>
         <label>End Time:</label>
-        <input type="datetime-local" name="end_time" required><br>
-        
-        <label>Timezone:</label>
-        <select name="timezone" required>
-            {% for tz in timezones %}
-                <option value="{{ tz }}">{{ tz }}</option>
+        <input type="datetime-local" name="end_time" required>
+        <br>
+        <label for="timezone">Timezone:</label>
+        <select id="timezone" name="timezone">
+            {% for tz in timezone_choices %}
+                <option value="{{ tz.0 }}">
+                    {{ tz.1 }}
+                </option>
             {% endfor %}
-        </select><br>
-        
+        </select>
+        <br>
         <button type="submit">Create Event</button>
     </form>
 {% endblock content %}
