@@ -35,14 +35,37 @@ def event_create(request):
     return render(request, "event_create.html", {"timezone_choices": TIMEZONE_CHOICES})
 
 
+import requests
+from django.shortcuts import render
+
 def holidays_list(request):
-    # Fetch holidays from an API or a static list
-    holidays = [
-        {"name": "New Year's Day", "date": "2024-01-01"},
-        {"name": "Christmas Day", "date": "2024-12-25"},
-        # Add more holidays as needed
-    ]
-    return render(request, "holidays.html", {"holidays": holidays})
+    # Calendarific API endpoint
+    api_url = "https://calendarific.com/api/v2/holidays"
+
+    # Calendarific API key (replace "YOUR_API_KEY" with your actual API key)
+    api_key = "nI8eR3fGqMzh5i2m1loHoT96BPjF5zfa"
+
+    # Country code and year for which you want to fetch holidays
+    country_code = "NP"  # Example: United States
+    year = 2024  # Example: 2024
+
+    # Make the API request
+    response = requests.get(api_url, params={"api_key": api_key, "country": country_code, "year": year})
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
+        data = response.json()
+        
+        # Extract holiday information from the response
+        holidays = data.get("response", {}).get("holidays", [])
+
+        # Render the template with the extracted holiday data
+        return render(request, "holidays.html", {"holidays": holidays})
+    else:
+        # If the request was not successful, handle the error
+        error_message = "Failed to fetch holidays. Status code: {}".format(response.status_code)
+        return render(request, "error.html", {"error_message": error_message})
 
 
 def calendar_view(request):
