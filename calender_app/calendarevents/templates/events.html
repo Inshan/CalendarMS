@@ -9,7 +9,8 @@
                 <br>
                 {{ event.description }}
             </li>
-        </ul>
+            <br>
         {% endfor %}
-        <a href="{% url 'calendar' %}">Back to Calendar</a>
+    </ul>
+    <a href="{% url 'calendar' %}">Back to Calendar</a>
 {% endblock content %}
