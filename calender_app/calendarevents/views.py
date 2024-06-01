@@ -1,20 +1,27 @@
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
 from .models import Event
 from django.shortcuts import render, redirect
 import pytz
-
+import requests
+from dateutil.parser import parse
+from datetime import datetime
+from django.urls import reverse
 
 TIMEZONE_CHOICES = [(tz, tz) for tz in pytz.all_timezones]
 
 
-def events_list(request):
-    evented = Event.objects.all()
-    return render(request, "events.html", {"evented": evented})
+def events_list(request, date):
+    date_obj = datetime.strptime(date, '%Y-%m-%d')
+    events = Event.objects.filter(start_time__date=date_obj)
+
+    if not events:
+        return render(request, "events.html", {"message": "No events registered"})
+
+    return render(request, "events.html", {"events": events, "date_obj": date_obj})
+
 
 def event_create(request):
-    if request.method == "POST":
+    if request.method == "POST": 
         title = request.POST.get("title")
         description = request.POST.get("description")
         start_time = request.POST.get("start_time")
@@ -35,9 +42,6 @@ def event_create(request):
     return render(request, "event_create.html", {"timezone_choices": TIMEZONE_CHOICES})
 
 
-import requests
-from django.shortcuts import render
-
 def holidays_list(request):
     # Calendarific API endpoint
     api_url = "https://calendarific.com/api/v2/holidays"
@@ -46,7 +50,7 @@ def holidays_list(request):
     api_key = "nI8eR3fGqMzh5i2m1loHoT96BPjF5zfa"
 
     # Country code and year for which you want to fetch holidays
-    country_code = "NP"  # Example: United States
+    country_code = "NP"  # Example: Nepal
     year = 2024  # Example: 2024
 
     # Make the API request
@@ -60,13 +64,33 @@ def holidays_list(request):
         # Extract holiday information from the response
         holidays = data.get("response", {}).get("holidays", [])
 
+        # Prepare data for calendar rendering
+        holidays_data = []
+        for holiday in holidays:
+            holiday_date = parse(holiday['date']['iso']).replace(tzinfo=None)
+            holidays_data.append({
+                'name': holiday['name'],
+                'date': holiday_date,
+                'day': holiday_date.day,
+                'month': holiday_date.month,
+                'year': holiday_date.year,
+            })
+
+        # Sort holidays by year, month, and day
+        # holidays_data.sort(key=lambda x: (x['day'], x['month'], x['year']))
+
         # Render the template with the extracted holiday data
-        return render(request, "holidays.html", {"holidays": holidays})
+        return render(request, "holidays.html", {"holidays_data": holidays_data})
     else:
         # If the request was not successful, handle the error
-        error_message = "Failed to fetch holidays. Status code: {}".format(response.status_code)
-        return render(request, "error.html", {"error_message": error_message})
+        message = "Failed to fetch holidays. Status code: {}".format(response.status_code)
+        return render(request, 'error_throw.html',{"message":message})
 
 
 def calendar_view(request):
     return render(request, "calendar.html")
+
+
+def error_throw(request):
+    message = request.GET.get('message', 'An error occurred.')
+    return render(request, "error_throw.html", {"message":message})
