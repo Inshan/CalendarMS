@@ -1,20 +1,41 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
-    <link rel="stylesheet" href="https://unpkg.com/react-calendar/dist/Calendar.css">
-</head>
-<body>
-    <h1>Calendar</h1>
-    <div>
-        <a href="{% url 'holidays' %}">View Holidays</a> | 
-        <a href="{% url 'events' %}">View Events</a> | 
-        <a href="{% url 'event_create' %}">Create Event</a>
-    </div>
-    {% block content %}
-    {% endblock content %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Holiday Calendar</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        {% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {% endcomment %}
+    </head>
+    <body>
+        <h1>Calendar</h1>
+        <div>
+            <a href="{% url 'holidays' %}">View Holidays</a> |
+            <a href="#" id="view-events-link">View Events</a> |
+            <a href="{% url 'event_create' %}">Create Event</a>
+        </div>
+        {% block content %}
+        {% endblock content %}
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const viewEventsLink = document.getElementById('view-events-link');
+        
+                viewEventsLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+        
+                    const date = prompt("Enter the date (YYYY-MM-DD):");
+                    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                        const url = `{% url 'events_by_date' 'PLACEHOLDER' %}`.replace('PLACEHOLDER', date);
+                        window.location.href = url;
+                    } else {
+                        alert("Please enter a valid date in the format YYYY-MM-DD.");
+                        const url = "{% url 'error_html' %}";
+                        window.location.href = url;
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

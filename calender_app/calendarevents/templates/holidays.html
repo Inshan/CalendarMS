@@ -1,13 +1,21 @@
 {% extends "calendar.html" %}
 {% load static %}
 {% block content %}
-    <h1>Holidays</h1>
-    <ul>
-        {% for holiday in holidays %}
-        <li>
-            <strong>{{ holiday.name }}</strong> - {{ holiday.date }}
-        </li>
+    {% load custom_filters %}
+    <div class="month-header">
+        <h1>Holiday Calendar for {{ holidays.0.year }}</h1>
+    </div>
+    <div class="calendar">
+        {% for i in 1|to:31 %}
+            <div class="day">
+                {% comment %} {{ i }} {% endcomment %}
+                {% for holiday in holidays_data %}
+                    {% if holiday.day == i %}
+                        <div class="holiday">{{ holiday.date }} {{ holiday.name }}</div>
+                    {% endif %}
+                {% endfor %}
+            </div>
         {% endfor %}
-    </ul>
+    </div>
     <a href="{% url 'calendar' %}">Back to Calendar</a>
 {% endblock content %}

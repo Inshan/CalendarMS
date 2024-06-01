@@ -1,16 +1,15 @@
-{% extends "calendar.html" %}
-{% load static %}
+<!-- your_app/templates/events.html -->
+{% extends "Calendar.html" %}
+
 {% block content %}
-    <h1>Events</h1>
-    <ul>
-        {% for event in evented %}
-            <li>
-                <strong>{{ event.title }}</strong> - {{ event.start_time }} to {{ event.end_time }}
-                <br>
-                {{ event.description }}
-            </li>
-            <br>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'calendar' %}">Back to Calendar</a>
-{% endblock content %}
+    <h1>Events on {{ date_obj.date }}</h1>
+    {% if events %}
+        <ul>
+            {% for event in events %}
+                <li>{{ event.title }}: {{ event.start_time }} - {{ event.end_time }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>{{ message }}</p>
+    {% endif %}
+{% endblock %}
