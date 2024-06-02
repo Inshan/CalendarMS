@@ -5,20 +5,39 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Holiday Calendar</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        {% comment %} <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {% endcomment %}
-    </head>
-    <body>
-        <h1>Calendar</h1>
-        <div>
-            <a href="{% url 'holidays' %}">View Holidays</a> |
-            <a href="#" id="view-events-link">View Events</a> |
-            <a href="{% url 'event_create' %}">Create Event</a>
-        </div>
-        {% block content %}
-        {% endblock content %}
-
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css"
+              rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+        <style>
+                  body {
+                      font-family: Arial, sans-serif;
+                  }
+                  #calendar {
+                      max-width: 900px;
+                      margin: 40px auto;
+                  }
+        </style>
         <script>
+            $(document).ready(function() {
+                $('#calendar').fullCalendar({
+                    header: {
+                    },
+                    defaultDate: new Date(),
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    dayClick: function(date, jsEvent, view) {
+                        var selectedDate = date.format();
+                        window.location.href = '/events/?date=' + selectedDate;
+                    }
+                });
+            });
+        </script>
+        
+        {% comment %} <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const viewEventsLink = document.getElementById('view-events-link');
         
@@ -31,11 +50,22 @@
                         window.location.href = url;
                     } else {
                         alert("Please enter a valid date in the format YYYY-MM-DD.");
-                        const url = "{% url 'error_html' %}";
+                        const url = "{% url 'error_throw' %}";
                         window.location.href = url;
                     }
                 });
             });
-        </script>
+        </script> {% endcomment %}
+    </head>
+    <body style="text-align: center;">
+        <h1>Calendar</h1>
+        <div>
+            <a href="{% url 'holidays' %}">View Holidays</a> |
+            {% comment %} <a href="#" id="view-events-link">View Events</a> | {% endcomment %}
+            <a href="{% url 'event_create' %}">Create Event</a>
+            <div id="calendar"></div>
+        </div>
+        {% block content %}
+        {% endblock content %}
     </body>
 </html>

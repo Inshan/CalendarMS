@@ -1,8 +1,6 @@
 <!-- your_app/templates/events.html -->
-{% extends "Calendar.html" %}
-
 {% block content %}
-    <h1>Events on {{ date_obj.date }}</h1>
+    <h1>Events on {{ formatted_date }}</h1>
     {% if events %}
         <ul>
             {% for event in events %}
@@ -12,4 +10,5 @@
     {% else %}
         <p>{{ message }}</p>
     {% endif %}
+    <a href="{% url 'calendar' %}">Back to Calendar</a>
 {% endblock %}

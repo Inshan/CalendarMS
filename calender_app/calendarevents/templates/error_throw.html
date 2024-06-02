@@ -1,7 +1,6 @@
-{% extends 'calendar.html' %}
-{% load static %}
 {% block content %}
     <h1>
         Error! {{message}}
     </h1>
+    <a href="{% url 'calendar' %}">Back to Calendar</a>
 {% endblock content %}
