@@ -47,7 +47,7 @@ def holidays_list(request):
     api_url = "https://calendarific.com/api/v2/holidays"
 
     # Calendarific API key (replace "YOUR_API_KEY" with your actual API key)
-    api_key = "nI8eR3fGqMzh5i2m1loHoT96BPjF5zfa"
+    api_key = ""
 
     # Country code and year for which you want to fetch holidays
     country_code = "NP"  # Example: Nepal
