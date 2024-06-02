@@ -10,14 +10,29 @@ from django.urls import reverse
 TIMEZONE_CHOICES = [(tz, tz) for tz in pytz.all_timezones]
 
 
+def events_view(request):
+    selected_date = request.GET.get('date')
+    try:
+        date_obj = datetime.strptime(selected_date, '%Y-%m-%d')
+        formatted_date = date_obj.strftime('%b %d, %Y')  # Format the date as "Jan 1, 2024"
+        events = Event.objects.filter(start_time__date=date_obj)
+        if events.exists():
+            return render(request, 'events.html', {'events': events, 'formatted_date': formatted_date})
+        else:
+            return redirect('error_throw')
+    except:
+        return redirect('error_throw')
+    
+
 def events_list(request, date):
     date_obj = datetime.strptime(date, '%Y-%m-%d')
+    formatted_date = date_obj.strftime('%b %d, %Y')  # Format the date as "Jan 1, 2024"
     events = Event.objects.filter(start_time__date=date_obj)
 
     if not events:
-        return render(request, "events.html", {"message": "No events registered"})
+        return render(request, "events.html", {"message": "No events registered", "formatted_date": formatted_date})
 
-    return render(request, "events.html", {"events": events, "date_obj": date_obj})
+    return render(request, "events.html", {"events": events, "formatted_date": formatted_date})
 
 
 def event_create(request):
